@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="title">Alas y Destinos - ® Turpial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Variables CSS para los temas de color */
+        :root {
+            --primary-color-dark: #FFD700; /* Amarillo */
+            --secondary-color-dark: #1A1A1A; /* Negro profundo */
+            --background-dark: #0A0A0A;
+            --text-color-dark: #EAEAEA;
+            --card-bg-dark: #1C1C1E;
+            --title-box-bg-dark: rgba(26, 26, 26, 0.7);
+
+            --primary-color-light: #FFB300;
+            --secondary-color-light: #F0F0F0;
+            --background-light: #FFFFFF;
+            --text-color-light: #333333;
+            --card-bg-light: #FFFFFF;
+            --title-box-bg-light: rgba(220, 220, 220, 0.7);
+        }
+
+        /* Estilos base del tema oscuro */
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-color-dark);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .card, .contact-box {
+            background-color: var(--card-bg-dark);
+            transition: background-color 0.5s, transform 0.3s;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color-dark);
+            color: var(--secondary-color-dark);
+        }
+        
+        .title-box {
+            background-color: var(--title-box-bg-dark);
+            padding: 1rem 2.5rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(8px);
+            transition: background-color 0.5s;
+        }
+        
+        /* Estilos para el tema claro */
+        body.light-theme {
+            background-color: var(--background-light);
+            color: var(--text-color-light);
+        }
+
+        .light-theme .card, .light-theme .contact-box {
+            background-color: var(--card-bg-light);
+            color: var(--text-color-light);
+            border-color: #D3D3D3;
+        }
+
+        .light-theme .cta-button {
+            background-color: var(--primary-color-light);
+            color: var(--text-color-light);
+        }
+
+        .light-theme .text-black {
+            color: var(--text-color-dark);
+        }
+        
+        .light-theme .title-box {
+            background-color: var(--title-box-bg-light);
+        }
+
+        .light-theme .footer-text {
+            color: white; /* Para que el texto del footer sea visible en tema claro */
+        }
+        
+        /* Animación del fondo con círculos */
+        .circle {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.1);
+            animation: moveCircle 20s linear infinite;
+            filter: blur(50px);
+            z-index: -1;
+        }
+
+        /* Posiciones y retrasos de los círculos */
+        .circle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; transform: scale(0.8); }
+        .circle:nth-child(2) { top: 40%; left: 80%; animation-delay: 5s; transform: scale(1.2); }
+        .circle:nth-child(3) { top: 70%; left: 30%; animation-delay: 10s; transform: scale(1.5); }
+        .circle:nth-child(4) { top: 85%; left: 60%; animation-delay: 15s; transform: scale(0.9); }
+        .circle:nth-child(5) { top: 25%; left: 50%; animation-delay: 7s; transform: scale(1.1); }
+        .circle:nth-child(6) { top: 60%; left: 10%; animation-delay: 12s; transform: scale(0.7); }
+
+        /* Animación para los círculos */
+        @keyframes moveCircle {
+            0% { transform: translate(0, 0) scale(var(--scale)); opacity: 0.5; }
+            25% { transform: translate(150px, -100px) scale(var(--scale)); opacity: 0.7; }
+            50% { transform: translate(-100px, 150px) scale(var(--scale)); opacity: 0.8; }
+            75% { transform: translate(50px, -200px) scale(var(--scale)); opacity: 0.6; }
+            100% { transform: translate(0, 0) scale(var(--scale)); opacity: 0.5; }
+        }
+
+        /* Animación para el título principal */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.95; }
+        }
+
+        .title-animate {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        /* Estilos de gradiente para el texto dorado */
+        .highlight-gold {
+            background: linear-gradient(45deg, #FFD700, #DAA520, #FFCC00);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        /* Estilos para ocultar/mostrar secciones con transición */
+        .page-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 1rem; /* Padding para dar espacio al contenido */
+        }
+
+        .page-section.active {
+            display: flex;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        /* Animación de entrada de página */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos para las tarjetas de planes y desarrollo */
+        .card-animate {
+            transition: all 0.3s ease-in-out;
+            border-color: #333;
+        }
+
+        .card-animate:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-box {
+            transition: transform 0.3s ease-in-out;
+            border: 2px solid var(--primary-color-dark);
+        }
+        .contact-box:hover {
+            transform: scale(1.05);
+        }
+
+        /* Estilo para los textos sin justificación, con buena legibilidad */
+        .text-readable {
+            max-width: 60ch; /* Limita el ancho de la línea para mejor lectura */
+            line-height: 1.6;
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Estilos para el logo */
+        .logo-img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .footer-logo {
+            height: 70px;
+            width: auto;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased relative overflow-hidden">
+    <div class="circle" style="--scale: 1.2;"></div>
+    <div class="circle" style="--scale: 0.9;"></div>
+    <div class="circle" style="--scale: 1.5;"></div>
+    <div class="circle" style="--scale: 0.8;"></div>
+    <div class="circle" style="--scale: 1.1;"></div>
+    <div class="circle" style="--scale: 0.7;"></div>
+
+    <div class="main-container">
+
+        <nav class="fixed top-0 left-0 w-full bg-black bg-opacity-70 backdrop-blur-sm shadow-md z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <img src="logo.png" alt="" class="logo-img mr-3">
+                    <a href="#" class="text-white text-2xl font-bold" onclick="showPage('home')" data-i18n="logo"></a>
+                </div>
+                <div class="flex-grow flex justify-center">
+                    <div class="flex items-center space-x-6">
+                        <a href="#" class="nav-link text-white hover:text-yellow-500 font-bold px-3 py-2 rounded-md transition-colors duration-300" data-page="home" data-i18n="nav-inicio">Inicio</a>
+                        <a href="#" class="nav-link text-white hover:text-yellow-500 font-bold px-3 py-2 rounded-md transition-colors duration-300" data-page="desarrollo" data-i18n="nav-desarrollo">Desarrollo</a>
+                        <a href="#" class="nav-link text-white hover:text-yellow-500 font-bold px-3 py-2 rounded-md transition-colors duration-300" data-page="planes" data-i18n="nav-planes">Planes</a>
+                        <a href="#" class="nav-link text-white hover:text-yellow-500 font-bold px-3 py-2 rounded-md transition-colors duration-300" data-page="especial" data-i18n="nav-special">Especial</a>
+                        <a href="#" class="nav-link text-white hover:text-yellow-500 font-bold px-3 py-2 rounded-md transition-colors duration-300" data-page="contacto" data-i18n="nav-contacto">Contacto</a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <button class="flex items-center text-white font-bold p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors">
+                            <i class="fa-solid fa-language text-xl"></i>
+                            <span class="ml-2 hidden sm:inline" data-i18n="lang-label">Español</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-32 bg-black bg-opacity-80 backdrop-blur-sm rounded-lg shadow-lg hidden group-hover:block">
+                            <button onclick="translatePage('es')" class="block w-full text-left px-4 py-2 text-white hover:bg-yellow-500 hover:text-black rounded-lg" data-i18n="lang-es">Español</button>
+                            <button onclick="translatePage('en')" class="block w-full text-left px-4 py-2 text-white hover:bg-yellow-500 hover:text-black rounded-lg" data-i18n="lang-en">Inglés</button>
+                        </div>
+                    </div>
+                    <button id="theme-toggle" class="p-3 rounded-full shadow-lg transition-transform hover:scale-110">
+                        <i id="theme-icon" class="fa-solid fa-sun text-2xl" style="color: var(--text-color-dark);"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="w-full flex-grow flex flex-col items-center pt-16">
+
+            <section id="home" class="page-section active text-center max-w-4xl w-full mx-auto p-4 md:p-8">
+                <div class="title-box mb-8">
+                    <h1 class="text-6xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tight highlight-gold title-animate" data-i18n="title-home">
+                        Alas y Destinos
+                    </h1>
+                </div>
+                <p class="mt-4 -mb-2 text-2xl sm:text-3xl font-semibold opacity-80" data-i18n="by-line">Turpial Airlines</p>
+                <p class="mt-8 text-sm sm:text-base md:text-lg mx-auto text-center max-w-4xl" data-i18n="home-intro">
+                </p>
+                <div class="flex justify-between mt-8 w-full">
+                    <button class="nav-button opacity-0" disabled></button>
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('desarrollo')">
+                        <span data-i18n="next-button">Siguiente</span> <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </section>
+
+            <section id="desarrollo" class="page-section text-center max-w-6xl w-full mx-auto p-4 md:p-8 pt-16">
+                <div class="title-box mb-8">
+                    <h2 class="text-4xl sm:text-5xl font-bold" data-i18n="title-dev">
+                        Desarrollo de la Primera Temporada
+                    </h2>
+                </div>
+                <p class="mb-8 text-lg mx-auto text-center max-w-3xl" data-i18n="dev-intro"></p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card card-animate flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-600">
+                        <i class="fa-solid fa-plane-departure text-4xl text-yellow-500 mb-4"></i>
+                        <p class="text-sm sm:text-base text-center font-semibold" data-i18n="dev-captains">
+                            Experimentados capitanes que nos revelarán los secretos de los cielos.
+                        </p>
+                    </div>
+                    <div class="card card-animate flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-600">
+                        <i class="fa-solid fa-suitcase-rolling text-4xl text-yellow-500 mb-4"></i>
+                        <p class="text-sm sm:text-base text-center font-semibold" data-i18n="dev-crew">
+                            Tripulantes de cabina que compartirán sus fascinantes anécdotas.
+                        </p>
+                    </div>
+                    <div class="card card-animate flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-600">
+                        <i class="fa-solid fa-microphone-lines text-4xl text-yellow-500 mb-4"></i>
+                        <p class="text-sm sm:text-base text-center font-semibold" data-i18n="dev-artist">
+                            Un invitado especial en nuestro tercer episodio, un reconocido artista que conectará la industria aérea con el mundo de la creatividad.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8 w-full">
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('home')">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> <span data-i18n="back-button">Retroceder</span>
+                    </button>
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('planes')">
+                        <span data-i18n="next-button">Siguiente</span> <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <section id="planes" class="page-section text-center max-w-6xl w-full mx-auto p-4 md:p-8 pt-16">
+                <div class="title-box mb-8">
+                    <h2 class="text-4xl sm:text-5xl font-bold" data-i18n="title-plans">
+                        Planes de Patrocinio
+                    </h2>
+                </div>
+                <p class="mb-4 text-center text-sm sm:text-base opacity-80" data-i18n="plans-intro"></p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card card-animate p-8 rounded-2xl shadow-xl border-4 border-yellow-500 transform scale-105 relative z-20">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-yellow-500 text-black text-sm font-bold rounded-full shadow-lg" data-i18n="popular">Más Popular</div>
+                        <h3 class="text-3xl font-extrabold text-center highlight-gold" data-i18n="plan-gold">PLAN ORO</h3>
+                        <p class="text-center text-4xl font-bold my-4" data-i18n="price-gold">$500</p>
+                        <ul class="list-disc list-inside space-y-3 text-sm sm:text-base text-left">
+                            <li data-i18n="oro-1"><i class="fa-solid fa-bullhorn text-yellow-500 mr-2"></i>Spot publicitario de 10 segundos en los 3 episodios.</li>
+                            <li data-i18n=" oro-2"><i class="fa-solid fa-image text-yellow-500 mr-2"></i>Logo en el cintillo publicitario.</li>
+                            <li data-i18n="oro-3"><i class="fa-solid fa-box-open text-yellow-500 mr-2"></i>Acceso para colocar material POP de la marca.</li>
+                            <li data-i18n="oro-4"><i class="fa-solid fa-share-nodes text-yellow-500 mr-2"></i>Mención y colaboraciones en Instagram, TikTok y YouTube.</li>
+                            <li data-i18n="oro-5"><i class="fa-solid fa-tv text-yellow-500 mr-2"></i>Acceso de publicidad en pantalla 10 segundos formato vertical 4K 55 pulgadas.</li>
+                            <li data-i18n="oro-6"><i class="fa-solid fa-microphone-lines text-yellow-500 mr-2"></i>Mención de presentación por la Host del podcast.</li>
+                        </ul>
+                        <a href="#" class="cta-button block w-full mt-6 py-3 rounded-lg text-center font-bold text-lg hover:opacity-90 transition-opacity" onclick="showPage('contacto')" data-i18n="sponsor-button">
+                            Patrocinar
+                        </a>
+                    </div>
+
+                    <div class="card card-animate p-8 rounded-2xl shadow-lg border border-gray-600">
+                        <h3 class="text-3xl font-bold text-center mb-4" data-i18n="plan-silver">PLAN PLATA</h3>
+                        <p class="text-center text-4xl font-bold my-4" data-i18n="price-silver">$450</p>
+                        <ul class="list-disc list-inside space-y-3 text-sm sm:text-base text-left">
+                            <li data-i18n="plata-1"><i class="fa-solid fa-image text-yellow-500 mr-2"></i>Logo en el cintillo publicitario.</li>
+                            <li data-i18n="plata-2"><i class="fa-solid fa-share-nodes text-yellow-500 mr-2"></i>Mención y colaboraciones en Instagram, TikTok y YouTube.</li>
+                            <li data-i18n="plata-3"><i class="fa-solid fa-tv text-yellow-500 mr-2"></i>Acceso de publicidad en pantalla 10 segundos formato vertical 4K 55 pulgadas.</li>
+                        </ul>
+                        <a href="#" class="cta-button block w-full mt-6 py-3 rounded-lg text-center font-bold text-lg hover:opacity-90 transition-opacity" onclick="showPage('contacto')" data-i18n="sponsor-button-plata">
+                            Patrocinar
+                        </a>
+                    </div>
+
+                    <div class="card card-animate p-8 rounded-2xl shadow-lg border border-gray-600">
+                        <h3 class="text-3xl font-bold text-center mb-4" data-i18n="plan-bronze">PLAN BRONCE</h3>
+                        <p class="text-center text-4xl font-bold my-4" data-i18n="price-bronze">$300</p>
+                        <ul class="list-disc list-inside space-y-3 text-sm sm:text-base text-left">
+                            <li data-i18n="bronce-1"><i class="fa-solid fa-share-nodes text-yellow-500 mr-2"></i>Mención y colaboraciones en Instagram, TikTok y YouTube.</li>
+                            <li data-i18n="bronce-2"><i class="fa-solid fa-tv text-yellow-500 mr-2"></i>Acceso de publicidad en pantalla 10 segundos formato vertical 4K 55 pulgadas.</li>
+                        </ul>
+                        <a href="#" class="cta-button block w-full mt-6 py-3 rounded-lg text-center font-bold text-lg hover:opacity-90 transition-opacity" onclick="showPage('contacto')" data-i18n="sponsor-button-bronce">
+                            Patrocinar
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8 w-full">
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('desarrollo')">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> <span data-i18n="back-button">Retroceder</span>
+                    </button>
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('especial')">
+                        <span data-i18n="next-button">Siguiente</span> <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <section id="especial" class="page-section text-center max-w-2xl w-full mx-auto p-4 md:p-8 pt-16">
+                <div class="title-box mb-8">
+                    <h2 class="text-4xl sm:text-5xl font-bold" data-i18n="title-special">
+                        Plan de Patrocinio Especial
+                    </h2>
+                </div>
+                <p class="mb-8 mx-auto text-center max-w-2xl text-lg" data-i18n="special-intro"></p>
+                <div class="card card-animate p-8 rounded-2xl shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full bg-yellow-500 py-2 text-center text-black font-bold text-sm sm:text-base" data-i18n="plan-special-highlight">
+                        LOCACIÓN ESPECIAL
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-3xl font-extrabold text-center highlight-gold" data-i18n="plan-special-title">PLAN LOCACIÓN</h3>
+                        <p class="text-center text-lg mt-4" data-i18n="plan-special-text"></p>
+                        <a href="#" class="cta-button block w-full mt-6 py-3 rounded-lg text-center font-bold text-lg hover:opacity-90 transition-opacity" onclick="showPage('contacto')" data-i18n="sponsor-button">
+                            Patrocinar
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-8 w-full">
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('planes')">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> <span data-i18n="back-button">Retroceder</span>
+                    </button>
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('contacto')">
+                        <span data-i18n="next-button">Siguiente</span> <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </section>
+
+
+            <section id="contacto" class="page-section text-center max-w-2xl w-full mx-auto p-4 md:p-8 pt-16">
+                <div class="title-box mb-8">
+                    <h2 class="text-4xl sm:text-5xl font-bold" data-i18n="title-contact">
+                        Contáctanos
+                    </h2>
+                </div>
+                <p class="mb-8 mx-auto text-center max-w-2xl" data-i18n="contact-intro">
+                </p>
+                <div class="space-y-6">
+                    <a href="mailto:mercadeoturpialairlines@gmail.com" class="contact-box block p-6 rounded-2xl shadow-lg border border-gray-600 hover:border-yellow-500">
+                        <i class="fa-solid fa-envelope text-4xl text-yellow-500 mb-4"></i>
+                        <p class="text-base sm:text-lg font-semibold" data-i18n="contact-email-title">Correo Electrónico</p>
+                        <p class="text-sm sm:text-base opacity-80 mt-1">mercadeoturpialairlines@gmail.com</p>
+                    </a>
+                    <a href="https://wa.link/1trsjx" target="_blank" class="contact-box block p-6 rounded-2xl shadow-lg border border-gray-600 hover:border-yellow-500">
+                        <i class="fa-brands fa-whatsapp text-4xl text-yellow-500 mb-4"></i>
+                        <p class="text-base sm:text-lg font-semibold" data-i18n="contact-whatsapp-title">Número de Contacto</p>
+                        <p class="text-sm sm:text-base opacity-80 mt-1">+58 412 4402426</p>
+                    </a>
+                </div>
+                <div class="flex justify-between mt-8 w-full">
+                    <button class="nav-button cta-button px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity" onclick="showPage('especial')">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> <span data-i18n="back-button">Retroceder</span>
+                    </button>
+                    <button class="nav-button opacity-0" disabled></button>
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="w-full py-8 text-center bg-black bg-opacity-70 backdrop-blur-sm shadow-md mt-auto">
+            <img src="logoa.png" alt="Logo Alas y Destinos" class="footer-logo mx-auto">
+            <p class="text-sm opacity-70 footer-text" data-i18n="footer-credits">
+                Propuesta diseñada por el Lcdo. Yolber Montañez,<br> representante del departamento de Mercadeo.
+            </p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="https://www.instagram.com/turpialairlines/?hl=es" target="_blank" class="text-white hover:text-yellow-500 transition-colors duration-300">
+                    <i class="fa-brands fa-instagram text-2xl"></i>
+                </a>
+                <a href="https://www.youtube.com/@turpialairlinestv" target="_blank" class="text-white hover:text-yellow-500 transition-colors duration-300">
+                    <i class="fa-brands fa-youtube text-2xl"></i>
+                </a>
+                <a href="https://www.turpialairlines.com/" target="_blank" class="text-white hover:text-yellow-500 transition-colors duration-300">
+                    <i class="fa-solid fa-globe text-2xl"></i>
+                </a>
+            </div>
+        </footer>
+
+    </div> <script>
+        // Objeto de traducciones para los textos de la página
+        const translations = {
+            'es': {
+                'title': 'Alas y Destinos - Patrocinio',
+                'logo': 'Alas y Destinos',
+                'nav-inicio': 'Inicio',
+                'nav-desarrollo': 'Desarrollo',
+                'nav-planes': 'Planes',
+                'nav-special': 'Especial',
+                'nav-contacto': 'Contacto',
+                'lang-label': 'Español',
+                'lang-es': 'Español',
+                'lang-en': 'Inglés',
+                'title-home': 'Alas y Destinos',
+                'by-line': 'Turpial Airlines',
+                'home-intro': 'Alas y Destinos es el puente audiovisual que conecta la magia de la aviación con el turismo y las historias de vida de sus protagonistas.<br><br>Con cada episodio, ofrecemos una plataforma única para que su marca vuele alto, alcanzando a una audiencia apasionada por los viajes, la aventura y la excelencia. Súmese a un viaje donde la pasión y el profesionalismo se encuentran.',
+                'next-button': 'Siguiente',
+                'back-button': 'Retroceder',
+                'title-dev': 'Desarrollo de la Primera Temporada',
+                'dev-intro': 'Este podcast será una serie de temporadas increíbles, cada una con tres episodios cuidadosamente diseñados para ofrecer una experiencia única y cautivadora a nuestros oyentes.',
+                'dev-captains': 'Experimentados capitanes que nos revelarán los secretos de los cielos.',
+                'dev-crew': 'Tripulantes de cabina que compartirán sus fascinantes anécdotas.',
+                'dev-artist': 'Un invitado especial en nuestro tercer episodio, un reconocido artista que conectará la industria aérea con el mundo de la creatividad.',
+                'title-plans': 'Planes de Patrocinio',
+                'plans-intro': 'Estos planes están diseñados para una temporada de 3 episodios.',
+                'popular': 'Más Popular',
+                'plan-gold': 'PLAN ORO',
+                'price-gold': '$500',
+                'oro-1': 'Spot publicitario de 10 segundos en los 3 episodios.',
+                'oro-2': 'Logo en el cintillo publicitario.',
+                'oro-3': 'Acceso para colocar material POP de la marca.',
+                'oro-4': 'Mención y colaboraciones en Instagram, TikTok y YouTube.',
+                'oro-5': 'Acceso de publicidad en pantalla 10 segundos formato vertical 4K 55 pulgadas.',
+                'oro-6': 'Mención de presentación por la Host del podcast.',
+                'sponsor-button': 'Patrocinar',
+                'plan-silver': 'PLAN PLATA',
+                'price-silver': '$450',
+                'plata-1': 'Logo en el cintillo publicitario.',
+                'plata-2': 'Mención y colaboraciones en Instagram, TikTok y YouTube.',
+                'plata-3': 'Acceso de publicidad en pantalla 10 segundos formato vertical 4K 55 pulgadas.',
+                'sponsor-button-plata': 'Patrocinar',
+                'plan-bronze': 'PLAN BRONCE',
+                'price-bronze': '$300',
+                'bronce-1': 'Mención y colaboraciones en Instagram, TikTok y YouTube.',
+                'bronce-2': 'Acceso de publicidad en pantalla 10 segundos formato vertical 4K 55 pulgadas.',
+                'sponsor-button-bronce': 'Patrocinar',
+                'title-special': 'Plan de Patrocinio Especial',
+                'special-intro': 'Este plan está diseñado para locales, establecimientos, salones de eventos y más, que estén interesados en patrocinar el podcast "Alas y Destinos" cediendo sus instalaciones para ser el centro de atención de un episodio, permitiendo la visibilidad de su marca a un público amplio.',
+                'plan-special-highlight': 'LOCACIÓN ESPECIAL',
+                'plan-special-title': 'PLAN LOCACIÓN',
+                'plan-special-text': 'Las condiciones de este patrocinio serán acordadas mediante contacto directo, permitiendo una colaboración personalizada y beneficiosa para ambas partes.',
+                'title-contact': 'Contáctanos',
+                'contact-intro': 'Interesado en patrocinar el podcast Alas y Destinos? A continuación les presentamos los contactos:',
+                'contact-email-title': 'Correo Electrónico',
+                'contact-whatsapp-title': 'Número de Contacto',
+                'footer-credits': 'Propuesta diseñada por el Lcdo. Yolber Montañez,<br> representante del departamento de Mercadeo.'
+            },
+            'en': {
+                'title': 'Wings and Destinations - Sponsorship',
+                'logo': 'Wings and Destinations',
+                'nav-inicio': 'Home',
+                'nav-desarrollo': 'Development',
+                'nav-planes': 'Plans',
+                'nav-special': 'Special',
+                'nav-contacto': 'Contact',
+                'lang-label': 'English',
+                'lang-es': 'Spanish',
+                'lang-en': 'English',
+                'title-home': 'Wings and Destinations',
+                'by-line': 'Turpial Airlines',
+                'home-intro': 'Wings and Destinations is the audiovisual bridge connecting the magic of aviation with tourism and the life stories of its protagonists.<br><br>With each episode, we offer a unique platform for your brand to fly high, reaching an audience passionate about travel, adventure, and excellence. Join a journey where passion and professionalism meet.',
+                'next-button': 'Next',
+                'back-button': 'Back',
+                'title-dev': 'Development of the First Season',
+                'dev-intro': 'This podcast will be a series of incredible seasons, each with three episodes carefully designed to offer a unique and captivating experience to our listeners.',
+                'dev-captains': 'Experienced captains who will reveal the secrets of the skies.',
+                'dev-crew': 'Cabin crew members who will share their fascinating anecdotes.',
+                'dev-artist': 'A special guest in our third episode, a renowned artist who will connect the airline industry with the world of creativity.',
+                'title-plans': 'Sponsorship Plans',
+                'plans-intro': 'These plans are designed for a season of 3 episodes.',
+                'popular': 'Most Popular',
+                'plan-gold': 'GOLD PLAN',
+                'price-gold': '$500',
+                'oro-1': '10-second advertising spot in all 3 episodes.',
+                'oro-2': 'Logo on the advertising banner.',
+                'oro-3': 'Access to place brand POP material.',
+                'oro-4': 'Mentions and collaborations on Instagram, TikTok, and YouTube.',
+                'oro-5': 'Access to screen advertising (10 seconds, 4K 55-inch vertical format).',
+                'oro-6': 'Presentation mention by the podcast Host.',
+                'sponsor-button': 'Sponsor',
+                'plan-silver': 'SILVER PLAN',
+                'price-silver': '$450',
+                'plata-1': 'Logo on the advertising banner.',
+                'plata-2': 'Mentions and collaborations on Instagram, TikTok, and YouTube.',
+                'plata-3': 'Access to screen advertising (10 seconds, 4K 55-inch vertical format).',
+                'sponsor-button-plata': 'Sponsor',
+                'plan-bronze': 'BRONZE PLAN',
+                'price-bronze': '$300',
+                'bronce-1': 'Mentions and collaborations on Instagram, TikTok and YouTube.',
+                'bronce-2': 'Access to screen advertising (10 seconds, 4K 55-inch vertical format).',
+                'sponsor-button-bronce': 'Sponsor',
+                'title-special': 'Special Sponsorship Plan',
+                'special-intro': 'This plan is designed for venues, establishments, event halls, and more, interested in sponsoring the "Wings and Destinations" podcast by providing their facilities to be the focus of an episode, allowing their brand to gain visibility with a broad audience.',
+                'plan-special-highlight': 'SPECIAL LOCATION',
+                'plan-special-title': 'LOCATION PLAN',
+                'plan-special-text': 'The terms of this sponsorship will be agreed upon through direct contact, allowing for a personalized and mutually beneficial collaboration.',
+                'title-contact': 'Contact Us',
+                'contact-intro': 'Interested in sponsoring the Wings and Destinations podcast? Here are the contacts:',
+                'contact-email-title': 'Email Address',
+                'contact-whatsapp-title': 'Contact Number',
+                'footer-credits': 'Proposal designed by Mr. Yolber Montañez,<br> representative of the Marketing Department.'
+            }
+        };
+
+        // Lógica para cambiar entre temas y secciones de la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page-section');
+            const pageOrder = ['home', 'desarrollo', 'planes', 'especial', 'contacto'];
+            let currentPageIndex = 0;
+            let currentLang = 'es';
+
+            // Función para alternar el tema (claro/oscuro)
+            const toggleTheme = () => {
+                body.classList.toggle('light-theme');
+                if (body.classList.contains('light-theme')) {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    themeIcon.style.color = 'var(--text-color-dark)';
+                } else {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    themeIcon.style.color = 'var(--text-color-dark)';
+                }
+            };
+            
+            // Función para cambiar el idioma de la página
+            window.translatePage = (lang) => {
+                currentLang = lang;
+                const elementsToTranslate = document.querySelectorAll('[data-i18n]');
+                elementsToTranslate.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[lang] && translations[lang][key]) {
+                        // Usar innerHTML para manejar el <br>
+                        el.innerHTML = translations[lang][key]; 
+                    }
+                });
+                // Actualiza el texto del botón de idioma
+                const langLabel = document.querySelector('[data-i18n="lang-label"]');
+                langLabel.textContent = translations[lang]['lang-label'];
+                
+                // Actualizar el título de la página
+                document.title = translations[lang]['title'];
+            };
+
+            // Función para mostrar una página específica
+            window.showPage = (pageId) => {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                const activePage = document.getElementById(pageId);
+                if (activePage) {
+                    activePage.classList.add('active');
+                    currentPageIndex = pageOrder.indexOf(pageId);
+                    window.scrollTo(0, 0); // Desplaza al inicio de la página
+                }
+            };
+
+            // Listener para el botón de cambio de tema
+            themeToggleButton.addEventListener('click', toggleTheme);
+
+            // Listener para los enlaces de navegación
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const pageId = link.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+
+            // Lógica para los botones Siguiente/Retroceder
+            window.navigate = (direction) => {
+                let newIndex = currentPageIndex;
+                if (direction === 'next' && currentPageIndex < pageOrder.length - 1) {
+                    newIndex++;
+                } else if (direction === 'prev' && currentPageIndex > 0) {
+                    newIndex--;
+                }
+                showPage(pageOrder[newIndex]);
+            };
+
+            // Mostrar la página de inicio por defecto
+            showPage('home');
+            translatePage('es'); // Establecer el idioma inicial
+        });
+    </script>
+</body>
+</html>
